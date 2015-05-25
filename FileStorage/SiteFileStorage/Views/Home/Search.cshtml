@@ -1,0 +1,33 @@
+﻿@model IEnumerable<SiteFileStorage.Models.FileViewModel>
+
+@{
+    ViewBag.Title = "Search";
+}
+
+<script src="~/Scripts/SearchScript/SearchEntryScript.js"></script>
+@if (@Model != null)
+{
+<ul class="nav nav-pills" role="tablist" id="list">
+    <li onclick="getList(this,'all')" role="presentation" class="active" id="all"><a href="#">All<span class="badge">@Model.Count()</span></a></li>
+    <li onclick="getList(this,'video')" role="presentation" id="video"><a href="#">Videos<span class="badge">@Model.Where(m=>m.FileType.Contains("video")).Count()</span></a></li>
+    <li onclick="getList(this,'audio')" role="presentation" id="audio"><a href="#">Audios<span class="badge">@Model.Where(m => m.FileType.Contains("audio")).Count()</span></a></li>
+    <li onclick="getList(this,'application')" role="presentation" id="application"><a  href="#">Documents<span class="badge">@Model.Where(m => m.FileType.Contains("application")).Count()</span></a></li>
+</ul>
+
+<div id="allList" style="display:block;">
+    @Html.Partial("_ShowListEntry", @Model)
+</div>
+<div id="videoList" style="display:none;">
+    @Html.Partial("_ShowListEntry", @Model.Where(m=>m.FileType.Contains("video")))
+</div>
+<div id="audioList" style="display:none;">
+    @Html.Partial("_ShowListEntry", @Model.Where(m => m.FileType.Contains("audio")))
+</div>
+<div id="applicationList" style="display:none;">
+    @Html.Partial("_ShowListEntry", @Model.Where(m => m.FileType.Contains("application")))
+</div>
+}
+else
+{
+    <h1>No search elements!</h1>
+}

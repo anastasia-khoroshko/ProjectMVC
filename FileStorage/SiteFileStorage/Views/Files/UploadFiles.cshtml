@@ -1,0 +1,115 @@
+﻿@model IEnumerable<SiteFileStorage.Models.FileViewModel>
+@{
+    ViewBag.Title = "UploadFiles";
+    Layout = null;
+}
+<html>
+<head>
+    <title></title>
+    <link href="~/Content/jquery.fileupload.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-theme.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/SiteFileStorage.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.9.1.min.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.fileupload.js"></script>
+    <script src="~/Scripts/jquery.ui.widget.js"></script>
+    <script src="~/Scripts/jquery.iframe-transport.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/UploadFileSqript/FileUpload.js"></script>
+    <style type="text/css">
+        .text-info{
+            display:none;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">FileStorage</a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="~/Views/Home/Index.cshtml">Home <span class="sr-only">(current)</span></a></li>
+                    @if (!@HttpContext.Current.User.Identity.IsAuthenticated)
+                    {
+                        <li><a href=@Url.Action("Login","Account")>Sign in</a></li>
+                    }
+                    else
+                    {
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">@HttpContext.Current.User.Identity.Name <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href=@Url.Action("Index", "Profile", new { email = HttpContext.Current.User.Identity.Name })>Profile</a></li>
+                                <li><a href=@Url.Action("Edit", "Profile")>Edit Profile</a></li>
+                                <li><a href=@Url.Action("UploadFiles", "Files")>Uploads file</a></li>
+                                <li><a href=@Url.Action("LogOff", "Account")>Sign out</a></li>
+                                <li class="divider"></li>
+                            </ul>
+                        </li>
+                        if (HttpContext.Current.User.IsInRole("Admin"))
+                        {
+                            <li><a href=@Url.Action("Index", "Admin")>Administration</a></li>
+                        }
+                    }
+
+
+                </ul>
+                <form class="navbar-form navbar-right" role="search" action="/Home/Search">
+                    <div class="form-group">
+                        <input type="text" name="tag" class="form-control" placeholder="Search">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+        <div class="container">
+            <div class="navbar-form navbar-right" style="margin-top:0px;margin-right:150px;">
+                <h2>Upload new file</h2>
+                <span class="btn btn-success fileinput-button">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    <span>Add files...</span>
+                    <input id="fileupload" type="file" name="files[]" multiple>
+                </span>
+                <br />
+                <div class="progress" style="width:200px">
+                    <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                        <span class="sr-only">0% complete</span>
+                    </div>
+                </div>
+                <br />
+                <form action="/Files/CreatePost">
+                    <label class="text-info" id="lblFN">File Name </label>
+                    <input id="file_name" name="file_name" class="text-info" disabled/>
+                    <br />
+                    <label class="text-info" id="lblFT">File Type </label>
+                    <input id="file_type" name="file_type" class="text-info"disabled/>
+                    <br />
+                    <label class="text-info" id="lblFS">File Size </label>
+                    <input id="file_size" name="file_size" class="text-info" disabled/>
+                    <label id="bytes" class="text-info">bytes</label>
+                    <br />
+                    <label id="lblname" class="text-info" >Name(required field)*</label>
+                    <input id="name" onchange="getNameFile(this)" name="name" class="text-info" />
+                    <br />
+                    <label id="lbldescription" class="text-info">Description</label>
+                    <input id="desсription" name="desсription" class="text-info" />
+                    <br />
+                    <button onclick="btnClick()" id="btncreate" type="submit" class="btn btn-primary" style="display:none" disabled>Create</button>
+                </form>
+            </div>
+            <div class="left" style="margin-left:200px;width:400px">
+                    @Html.Partial("_ShowListEntry", @Model)
+            </div>
+    </div>
+    
+</body>
+</html>

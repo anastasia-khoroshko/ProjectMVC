@@ -1,0 +1,61 @@
+﻿@model SiteFileStorage.Models.RegisterViewModel
+
+@{
+    ViewBag.Title = "Register";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+
+<form class="form-horizontal" action="~/Account/Register" method="post" style="margin-top:170px;margin-left:350px">
+    <div style="margin-top:170px;margin-left:100px">
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+    </div>
+    <div class="form-group">
+        <label for="inputLogin" class="col-sm-2 control-label" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;font-size:medium;">Login</label>
+        <div class="col-sm-10">
+            @Html.EditorFor(model => model.Login)
+            @Html.ValidationMessageFor(model => model.Login)
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputEmail" class="col-sm-2 control-label" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;font-size:medium;">Email</label>
+        <div class="col-sm-10">
+            @Html.EditorFor(model => model.Email)
+            @Html.ValidationMessageFor(model => model.Email)
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputPassword" class="col-sm-2 control-label" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;font-size:medium;">Password</label>
+        <div class="col-sm-10">
+            @Html.EditorFor(model => model.Password)
+            @Html.ValidationMessageFor(model => model.Password)
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputConfirmPassword" class="col-sm-2 control-label" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;font-size:medium;">Confirm Password</label>
+        <div class="col-sm-10">
+            @Html.EditorFor(model => model.ConfirmPassword)
+            @Html.ValidationMessageFor(model => model.ConfirmPassword)
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputCaptcha" class="col-sm-2 control-label" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;font-size:medium;">Enter Captcha:</label>
+        <div class="col-sm-10">
+            <img src="@Url.Action("Captcha", "Account")" alt="captcha" /><br>
+            @Html.EditorFor(model => model.Captcha)
+                @Html.ValidationMessageFor(model => model.Captcha)
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary">Register</button>
+            @Html.ActionLink("Cancel", "Login","Account")
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

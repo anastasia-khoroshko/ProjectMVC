@@ -1,0 +1,56 @@
+﻿@model SiteFileStorage.Models.UserViewModel
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<form class="form-horizontal" action="~/Admin/Edit" method="post" style="margin-top:170px;margin-left:350px">
+    <div style="margin-top:170px;margin-left:100px">
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+    </div>
+    @Html.HiddenFor(model=>model.Id)
+    <p style="margin-top:170px;margin-left:160px;font-size:large">Edit User Profile</p>
+    <div class="form-group">
+        <label for="inputLogin" class="col-sm-2 control-label" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;font-size:medium;">Login</label>
+        <div class="col-sm-10">
+            @Html.EditorFor(model => model.Login)
+            @Html.ValidationMessageFor(model => model.Login)
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputEmail" class="col-sm-2 control-label" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;font-size:medium;">Email</label>
+        <div class="col-sm-10">
+            @Html.EditorFor(model => model.Email)
+            @Html.ValidationMessageFor(model => model.Email)
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputCreatedDate" class="col-sm-2 control-label" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;font-size:medium;">Created Date</label>
+        <div class="col-sm-10">
+            @Html.EditorFor(model => model.CreatedDate)
+            @Html.ValidationMessageFor(model => model.CreatedDate)
+        </div>
+    </div>
+
+    <div class="form-group">
+    <label for="inputRole" class="col-sm-2 control-label" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;font-size:medium;">Role</label>
+    <div class="col-sm-10">
+        @Html.EditorFor(model => model.Role)
+        @Html.ValidationMessageFor(model => model.Role)
+    </div>
+    </div>
+   
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary">Save</button>
+            @Html.ActionLink("Cancel", "Index", "Admin")
+        </div>
+    </div>
+</form>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

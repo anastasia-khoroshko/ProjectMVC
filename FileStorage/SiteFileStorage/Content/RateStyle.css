@@ -1,0 +1,18 @@
+﻿.rating-star-block .star.outline {
+            background: url("star-empty-lg.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+        }
+        .rating-star-block .star.filled {
+            background: url("star-fill-lg.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+        }
+        .rating-star-block .star {
+            color:rgba(0,0,0,0);
+            display : inline-block;
+            height:24px;
+            overflow:hidden;
+            text-indent:-999em;
+            width:24px;
+        }
+        a {
+            color:#005782;
+            text-decoration:none;
+        }

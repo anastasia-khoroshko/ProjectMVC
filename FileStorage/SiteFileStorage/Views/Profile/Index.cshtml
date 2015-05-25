@@ -1,0 +1,60 @@
+﻿@model SiteFileStorage.Models.ProfileViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+<form class="form-horizontal" style="margin-top:50px;margin-left:350px">
+    <div class="form-group">
+        <div class="col-sm-10">
+            <h3>@Html.DisplayFor(model => model.FirstName) @Html.DisplayFor(model => model.LastName)</h3>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputLogin" class="col-sm-2 control-label" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;font-size:medium;">Login</label>
+        <div class="col-sm-10">
+            @Html.DisplayFor(model => model.Login)
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputAge" class="col-sm-2 control-label" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;font-size:medium;">Age</label>
+        <div class="col-sm-10">
+            @Html.DisplayFor(model => model.Age)
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputEmail" class="col-sm-2 control-label" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;font-size:medium;">Email</label>
+        <div class="col-sm-10">
+            @Html.DisplayFor(model => model.Email)
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputCountry" class="col-sm-2 control-label" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;font-size:medium;">HomeCountry</label>
+        <div class="col-sm-10">
+            @Html.DisplayFor(model => model.Country)
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputCity" class="col-sm-2 control-label" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;font-size:medium;">HomeTown</label>
+        <div class="col-sm-10">
+            @Html.DisplayFor(model => model.City)
+        </div>
+    </div>
+</form>
+@if(@Model.Email==HttpContext.Current.User.Identity.Name)
+{ 
+<div class="text-right">
+    @Html.ActionLink("Edit Profile", "Edit", "Profile")
+</div>
+}
+
+@if (@Model.UploadFiles != null)
+{
+    <h3 style="color:aqua">My Files:</h3>
+    <div>
+        <p>
+            @Html.Partial("_ShowListEntry", @Model.UploadFiles)
+        </p>
+    </div>
+}

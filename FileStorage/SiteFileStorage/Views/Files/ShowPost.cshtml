@@ -1,0 +1,130 @@
+﻿@model SiteFileStorage.Models.FileViewModel
+
+@{
+
+    ViewBag.Title = "ShowPost";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Content/StyleWindow.css" rel="stylesheet" />
+<link href="~/Content/RateStyle.css" rel="stylesheet" />
+<script src="~/Scripts/ShowPostScript/ShowPost.js"></script>
+
+<center>
+    <div class="display-field" id="newName">
+        <h2>@Html.DisplayFor(model => model.Name)</h2>
+    </div>
+    <div class="hidden">
+        @Html.HiddenFor(model => model.Id)
+    </div>
+    <div>
+    @if (Model.UserEmail == HttpContext.Current.User.Identity.Name|| HttpContext.Current.User.IsInRole("Admin"))
+    {
+        <span id="edit" class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+        <a href="@Url.Action("Delete", "Files", new { id=@Model.Id})"><span id="delete" class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+        <div id="shadow"></div>
+        <div id="window">
+                <div id="close"></div>
+                <div class="hidden">
+                    @Html.HiddenFor(model => model.Id)
+                </div>
+                <div class="display-label">
+                    @Html.DisplayNameFor(model => model.Name)
+                </div>
+                <div class="editor-field">
+                    @Html.EditorFor(model => model.Name)
+                    <div id="error" style="color:red;"></div>
+                </div>
+
+                <div class="display-label">
+                    @Html.DisplayNameFor(model => model.Description)
+                </div>
+                <div class="editor-field">
+                    @Html.EditorFor(model => model.Description)
+                </div>
+                <br />
+                <button class="btn btn-primary" id="savepost">Save Changes</button>
+        </div>
+    }
+    </div>
+    @if (Model.FileType.Contains("video"))
+    {
+
+        <video controls="controls" preload="metadata" width="640" height="360">
+            <source type=@Model.FileType src="@Url.Action("FileShow", "Files", new { name=@Model.FileName})" />
+        </video>
+    }
+
+    @if (Model.FileType.Contains("audio"))
+    {
+        <audio controls="controls" preload="metadata">
+            <source type=@Model.FileType src="@Url.Action("FileShow", "Files", new { name=@Model.FileName})" />
+        </audio>
+
+    }
+    @if (Model.FileType.Contains("application"))
+    {
+        <span class="glyphicon glyphicon-tasks" aria-hidden="true" style="font-size:x-large"></span><h4>@Model.FileName</h4>
+    }
+    @if (@Model.Description != "")
+    {
+        <div class="display-field" id="newDesc">
+            <em>@Html.DisplayFor(model => model.Description)</em>
+        </div>
+    }
+    <div class="display-field">
+        <p>posted by <a href="@Url.Action("Index", "Profile", new {email=@Model.UserEmail })">@Html.DisplayFor(model => model.UserName)</a></p>
+    </div>
+    <div style="width:400px">
+        <span class="glyphicon glyphicon-download" aria-hidden="true" style="font-size:large">
+            <a href=@Url.Action("Download", "Files", new { name = @Model.FileName,type=@Model.FileType })> Download @Html.DisplayFor(model => model.FileSize) Kb</a>
+        </span>
+    </div>
+
+    <h4>Current Score :</h4><span class="CurrentScore"><img src="~/Content/star-fill-lg.png" /> @Model.Score</span>
+    @if (@Model.RatedUser == null || !@Model.RatedUser.Contains(@Model.CurrentUserId))
+    {
+        <div class="rating-star-block" id='@Model.Id'>
+            <input type="hidden" class="postID" value='@Model.Id' />
+            <div class="yourScore">Your Score : </div>
+            <a class="star outline" href="#" rating="1" title="vote 1"> vote 1</a>
+            <a class="star outline" href="#" rating="2" title="vote 2"> vote 2</a>
+            <a class="star outline" href="#" rating="3" title="vote 3"> vote 3</a>
+            <a class="star outline" href="#" rating="4" title="vote 4"> vote 4</a>
+            <a class="star outline" href="#" rating="5" title="vote 5"> vote 5</a>
+        </div>
+        <div id="myElem" style="position:absolute; top:10px; left:50%; display:none; background-color:yellow; padding:5px; border:1px solid red">
+            Thank you for your rating!
+        </div>
+    }
+    else
+    {
+        <div style="color:red"> You already rated this post </div>
+    }
+    <div style="width:400px;">
+        <p class="nav navbar-left" style="color:darkblue;font-size:x-large">Comments:</p>
+    </div>
+    <br />
+    <br />
+    <div style="width:400px;">
+        @if (ViewBag.Comments != null)
+        {
+            foreach (var com in ViewBag.Comments)
+            {
+                <p class="nav navbar-left">@com.Text posted by  <a href="@Url.Action("Index", "Profile", new { email=@com.UserEmail})">@com.UserName</a></p>
+                <br />
+            }
+
+        }
+        <p class="nav navbar-left" id="list"></p>
+    </div>
+    <br />
+    <form>
+        <div>
+            <textarea id="comment" name="comment" style="width:400px;height:50px;"></textarea><p id="errorCom"></p>
+        </div>
+        <button type="button" name="addComment" id="addComment" class="btn btn-primary">Add Comment</button>
+    </form>
+</center>
+
+

@@ -1,0 +1,59 @@
+﻿@model SiteFileStorage.Models.ProfileViewModel
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Create Profile</h2>
+
+<form class="form-horizontal" action="~/Profile/Create" method="post" style="margin-top:170px;margin-left:350px">
+    <div style="margin-top:170px;margin-left:100px">
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+    </div>
+    <div class="form-group">
+        <label for="inputFirstName" class="col-sm-2 control-label" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;font-size:medium;">First Name</label>
+        <div class="col-sm-10">
+            @Html.EditorFor(model => model.FirstName)
+            @Html.ValidationMessageFor(model => model.FirstName)
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputLastName" class="col-sm-2 control-label" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;font-size:medium;">Last Name</label>
+        <div class="col-sm-10">
+            @Html.EditorFor(model => model.LastName)
+            @Html.ValidationMessageFor(model => model.LastName)
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputAge" class="col-sm-2 control-label" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;font-size:medium;">Age</label>
+        <div class="col-sm-10">
+            @Html.EditorFor(model => model.Age)
+            @Html.ValidationMessageFor(model => model.Age)
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputCountry" class="col-sm-2 control-label" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;font-size:medium;">HomeCountry</label>
+        <div class="col-sm-10">
+            @Html.EditorFor(model => model.Country)
+            @Html.ValidationMessageFor(model => model.Country)
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputCity" class="col-sm-2 control-label" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;font-size:medium;">HomeTown</label>
+        <div class="col-sm-10">
+            @Html.EditorFor(model => model.City)
+            @Html.ValidationMessageFor(model => model.City)
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary">Create</button>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,43 @@
+﻿@model IEnumerable<SiteFileStorage.Models.UserViewModel>
+@{
+    ViewBag.Title = "Index";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+<form>
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+</form>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Login</th>
+            <th>Email</th>
+            <th>Created Date</th>
+            <th>Role</th>
+            <th>Opeartions</th>
+        </tr>
+
+    </thead>
+    <tbody>
+        @foreach (var user in @Model)
+        {
+
+            <tr>
+                <td>@user.Id</td>
+                <td>@user.Login</td>
+                <td>@user.Email</td>
+                <td>@Html.DisplayFor(d=>@user.CreatedDate)</td>
+                <td>@user.Role</td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = @user.Id })
+                    <br />
+                    @if (HttpContext.Current.User.Identity.Name != @user.Email)
+                    {
+                        @Html.ActionLink("Delete", "Delete", new { id = @user.Id })
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

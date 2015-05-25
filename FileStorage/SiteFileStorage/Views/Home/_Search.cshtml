@@ -1,0 +1,17 @@
+﻿@model IEnumerable<SiteFileStorage.Models.FileViewModel>
+
+@{
+    ViewBag.Title = "Search";
+}
+
+
+<ul class="nav nav-pills" role="tablist">
+    <li name="All" role="presentation" class="active"><a href="#">All<span class="badge">@Model.Count()</span></a></li>
+    <li name="Video" role="presentation"><a href="#">Videos<span class="badge">@Model.Where(m => m.FileType.Contains("video")).Count()</span></a></li>
+    <li name="Audio" role="presentation"><a href="#">Audios<span class="badge">@Model.Where(m => m.FileType.Contains("audio")).Count()</span></a></li>
+    <li name="Other" role="presentation"><a href="#">Documents<span class="badge">@Model.Where(m => m.FileType.Contains("application")).Count()</span></a></li>
+</ul>
+
+<div>
+    @Html.Partial("_ShowListEntry", @Model);
+</div>

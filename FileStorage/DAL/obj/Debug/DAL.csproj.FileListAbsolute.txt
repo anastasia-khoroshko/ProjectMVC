@@ -1,0 +1,14 @@
+C:\Users\User\Documents\Visual Studio 2013\Projects\FileStorage\DAL\bin\Debug\DAL.dll.config
+C:\Users\User\Documents\Visual Studio 2013\Projects\FileStorage\DAL\bin\Debug\DAL.dll
+C:\Users\User\Documents\Visual Studio 2013\Projects\FileStorage\DAL\bin\Debug\DAL.pdb
+C:\Users\User\Documents\Visual Studio 2013\Projects\FileStorage\DAL\bin\Debug\DAL.Interfaces.dll
+C:\Users\User\Documents\Visual Studio 2013\Projects\FileStorage\DAL\bin\Debug\EntityFramework.dll
+C:\Users\User\Documents\Visual Studio 2013\Projects\FileStorage\DAL\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\User\Documents\Visual Studio 2013\Projects\FileStorage\DAL\bin\Debug\ORM.dll
+C:\Users\User\Documents\Visual Studio 2013\Projects\FileStorage\DAL\bin\Debug\DAL.Interfaces.pdb
+C:\Users\User\Documents\Visual Studio 2013\Projects\FileStorage\DAL\bin\Debug\ORM.pdb
+C:\Users\User\Documents\Visual Studio 2013\Projects\FileStorage\DAL\bin\Debug\EntityFramework.xml
+C:\Users\User\Documents\Visual Studio 2013\Projects\FileStorage\DAL\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\User\Documents\Visual Studio 2013\Projects\FileStorage\DAL\obj\Debug\DAL.csprojResolveAssemblyReference.cache
+C:\Users\User\Documents\Visual Studio 2013\Projects\FileStorage\DAL\obj\Debug\DAL.dll
+C:\Users\User\Documents\Visual Studio 2013\Projects\FileStorage\DAL\obj\Debug\DAL.pdb
