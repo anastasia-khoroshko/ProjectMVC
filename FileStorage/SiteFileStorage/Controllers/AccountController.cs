@@ -42,7 +42,7 @@ namespace SiteFileStorage.Controllers
                         }
                         else
                         {
-                            return RedirectToAction("Index", "Home");
+                            return RedirectToAction("UploadFiles", "Files");
                         }
                     }
 

@@ -66,12 +66,11 @@
     {
         <span class="glyphicon glyphicon-tasks" aria-hidden="true" style="font-size:x-large"></span><h4>@Model.FileName</h4>
     }
-    @if (@Model.Description != "")
-    {
+   
         <div class="display-field" id="newDesc">
             <em>@Html.DisplayFor(model => model.Description)</em>
         </div>
-    }
+   
     <div class="display-field">
         <p>posted by <a href="@Url.Action("Index", "Profile", new {email=@Model.UserEmail })">@Html.DisplayFor(model => model.UserName)</a></p>
     </div>

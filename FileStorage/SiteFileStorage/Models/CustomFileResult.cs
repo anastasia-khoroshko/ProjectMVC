@@ -17,12 +17,9 @@ namespace SiteFileStorage.Models
         }
         public override void ExecuteResult(ControllerContext context)
         {
-            //The File Path 
             var filePath = HostingEnvironment.MapPath(@"~/UploadFiles/" + FileName);
-            //The header information 
             context.HttpContext.Response.AddHeader("Content-Disposition", "attachment; filename=" + FileName);
             var file = new FileInfo(filePath);
-            //Check the file exist,  it will be written into the response 
             if (file.Exists)
             {
                 var stream = file.OpenRead();

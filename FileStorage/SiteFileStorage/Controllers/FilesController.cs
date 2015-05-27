@@ -153,7 +153,7 @@ namespace SiteFileStorage.Controllers
                 var user = _userService.GetUserByPredicate(u => u.Email == HttpContext.User.Identity.Name);
                 var post = _postService.GetByPredicate(p => p.Id == id);
                 if (post == null)
-                    return HttpNotFound();
+                    return RedirectToAction("NotFound", "Home");
                 else
                 {
                     return View(new FileViewModel()
@@ -244,7 +244,7 @@ namespace SiteFileStorage.Controllers
             {
                 var post = _postService.GetPostsByPredicate(p => p.Id == postId);
                 if (string.IsNullOrEmpty(comment) || post == null)
-                    return RedirectToAction("NotFound", "Home");
+                    return new HttpStatusCodeResult(202);
                 var newComment = new CommentEntity()
                     {
                         Text = comment,

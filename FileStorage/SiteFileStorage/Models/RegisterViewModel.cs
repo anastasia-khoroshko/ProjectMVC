@@ -33,7 +33,7 @@ namespace SiteFileStorage.Models
         [Compare("Password", ErrorMessage = "Passwords don`t match")]
         public string ConfirmPassword { get; set; }
 
-        [Required]
+        [Required(ErrorMessage="Enter captcha")]
         public string Captcha { get; set; }
 
         [DataType(DataType.Date)]
