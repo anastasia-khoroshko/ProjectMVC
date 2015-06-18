@@ -15,5 +15,7 @@ namespace BLL.Interfaces.Entities
         public string FileType { get; set; }
         public int FileSize { get; set; }
         public int UserId { get; set; }
+        public bool Permit { get; set; }
+        public List<CategoryEntity> Categories { get; set; }
     }
 }

@@ -1,8 +1,11 @@
-﻿@model IEnumerable<SiteFileStorage.Models.FileViewModel>
+﻿
+@model PagedList.IPagedList<SiteFileStorage.Models.FileViewModel>
+@using PagedList.Mvc;
 @{
     ViewBag.Title = "UploadFiles";
     Layout = null;
 }
+
 <html>
 <head>
     <title></title>
@@ -17,11 +20,7 @@
     <script src="~/Scripts/jquery.iframe-transport.js"></script>
     <script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
     <script src="~/Scripts/UploadFileSqript/FileUpload.js"></script>
-    <style type="text/css">
-        .text-info{
-            display:none;
-        }
-    </style>
+    <link href="~/Content/PagedList.css" rel="stylesheet" />
 </head>
 <body>
     <nav class="navbar navbar-inverse">
@@ -49,7 +48,7 @@
                             <ul class="dropdown-menu" role="menu">
                                 <li><a href=@Url.Action("Index", "Profile", new { email = HttpContext.Current.User.Identity.Name })>Profile</a></li>
                                 <li><a href=@Url.Action("Edit", "Profile")>Edit Profile</a></li>
-                                <li><a href=@Url.Action("UploadFiles", "Files")>Uploads file</a></li>
+                                <li><a href=@Url.Action("UploadFiles", "Files")>Files</a></li>
                                 <li><a href=@Url.Action("LogOff", "Account")>Sign out</a></li>
                                 <li class="divider"></li>
                             </ul>
@@ -57,6 +56,10 @@
                         if (HttpContext.Current.User.IsInRole("Admin"))
                         {
                             <li><a href=@Url.Action("Index", "Admin")>Administration</a></li>
+                        }
+                        if (HttpContext.Current.User.IsInRole("Moderator"))
+                        {
+                            <li><a href=@Url.Action("Index", "Moderator")>Moderator</a></li>
                         }
                     }
 
@@ -72,7 +75,8 @@
         </div>
     </nav>
         <div class="container">
-            <div class="navbar-form navbar-right" style="margin-top:0px;margin-right:150px;">
+            
+            <div class="navbar-form navbar-right" style="margin-top:0px;margin-right:150px; ">
                 <h2>Upload new file</h2>
                 <span class="btn btn-success fileinput-button">
                     <i class="glyphicon glyphicon-plus"></i>
@@ -86,29 +90,51 @@
                     </div>
                 </div>
                 <br />
-                <form action="/Files/CreatePost">
+                <fieldset id="formUpload" style="display:none">
                     <label class="text-info" id="lblFN">File Name </label>
-                    <input id="file_name" name="file_name" class="text-info" disabled/>
+                    <br />
+                    <input id="file_name" name="file_name" class="text-info" disabled />
                     <br />
                     <label class="text-info" id="lblFT">File Type </label>
-                    <input id="file_type" name="file_type" class="text-info"disabled/>
+                    <br />
+                    <input id="file_type" name="file_type" class="text-info" disabled />
                     <br />
                     <label class="text-info" id="lblFS">File Size </label>
-                    <input id="file_size" name="file_size" class="text-info" disabled/>
+                    <br />
+                    <input id="file_size" name="file_size" class="text-info" disabled />
                     <label id="bytes" class="text-info">bytes</label>
                     <br />
-                    <label id="lblname" class="text-info" >Name(required field)*</label>
+                    <label id="lblname" class="text-info">Name(required field)*</label>
+                    <br />
                     <input id="name" onchange="getNameFile(this)" name="name" class="text-info" />
                     <br />
                     <label id="lbldescription" class="text-info">Description</label>
+                    <br />
                     <input id="desсription" name="desсription" class="text-info" />
                     <br />
-                    <button onclick="btnClick()" id="btncreate" type="submit" class="btn btn-primary" style="display:none" disabled>Create</button>
-                </form>
+                    <form>
+                        @foreach (var Category in ViewBag.Categories)
+                        {
+
+                            <label style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size:medium;" class="text-info">
+                                <input id="@Category.Id" name="@Category.Name" type="checkbox"><input name="@Category.Name" type="hidden" value="false">
+                                <label>@Category.Name</label>
+                            </label>
+
+                            <br />
+                        }
+                        <button onclick="btnClick(this.form)" id="btncreate" type="submit" class="btn btn-primary" disabled>Create</button>
+                    </form>
+                </fieldset>
             </div>
+
             <div class="left" style="margin-left:200px;width:400px">
                     @Html.Partial("_ShowListEntry", @Model)
+                <div id="contentPager">
+                    @Html.PagedListPager(Model, page => Url.Action("UploadFiles", new { page }))
+                </div>
             </div>
+            
     </div>
     
 </body>

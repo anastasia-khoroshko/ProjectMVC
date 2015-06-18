@@ -15,17 +15,15 @@ namespace BLL.Services
     public class ProfileService : IProfileService
     {
         private readonly IUnitOfWork uow;
-        private readonly IProfileRepository profileRepository;
-        public ProfileService(IUnitOfWork uow, IProfileRepository profileRepository)
+        public ProfileService(IUnitOfWork uow)
         {
             this.uow = uow;
-            this.profileRepository = profileRepository;
         }
         public ProfileEntity GetProfileByUser(int userId)
         {
             try
-            { 
-            var profile = profileRepository.GetProfileByUser(userId);
+            {
+                var profile = ((IProfileRepository)uow.GetRepository<DalProfile>()).GetProfileByUser(userId);
             if (profile == null)
                 return null;
             else
@@ -40,8 +38,8 @@ namespace BLL.Services
         public ProfileEntity CreateProfile(ProfileEntity profile)
         {
             try
-            { 
-            profileRepository.Create(profile.ToDalProfile());
+            {
+                uow.GetRepository<DalProfile>().Create(profile.ToDalProfile());
             }
             catch (SqlException ex)
             {
@@ -56,7 +54,7 @@ namespace BLL.Services
 
             try
             {
-                profileRepository.Update(profile.ToDalProfile());
+                uow.GetRepository<DalProfile>().Update(profile.ToDalProfile());
                 uow.Commit();
             }
             catch (Exception exception)
@@ -72,12 +70,12 @@ namespace BLL.Services
         {
             try
             {
-                DalProfile profile = profileRepository.GetByPredicate(x => x.Id == id);
+                DalProfile profile = uow.GetRepository<DalProfile>().GetByPredicate(x => x.Id == id);
                 if (profile == null)
                 {
                     throw new Exception();
                 }
-                profileRepository.Delete(id);
+                uow.GetRepository<DalProfile>().Delete(id);
             }
             catch (SqlException ex)
             {

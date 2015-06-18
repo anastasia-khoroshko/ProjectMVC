@@ -20,12 +20,13 @@ namespace DependencyResolver
         public static void ConfigurateResolver(this IKernel kernel)
         {
             kernel.Bind<DbContext>().To<SiteFileModel>().InRequestScope();
-            kernel.Bind<IRepository<DalUser>>().To<UserRepository>();
-            kernel.Bind<IRepository<DalRole>>().To<RoleRepository>();
-            kernel.Bind<IProfileRepository>().To<ProfileRepository>();
-            kernel.Bind<IPostRepository>().To<PostRepository>();
-            kernel.Bind<IVoteRepository>().To<VoteRepository>();
-            kernel.Bind<ICommentRepository>().To<CommentRepository>();
+            //kernel.Bind<IRepository<DalUser>>().To<UserRepository>();
+            //kernel.Bind<IRepository<DalRole>>().To<RoleRepository>();
+            //kernel.Bind<IProfileRepository>().To<ProfileRepository>();
+            //kernel.Bind<IPostRepository>().To<PostRepository>();
+            //kernel.Bind<IVoteRepository>().To<VoteRepository>();
+            //kernel.Bind<ICommentRepository>().To<CommentRepository>();
+            //kernel.Bind<IRepository<DalCategory>>().To<CategoryRepository>();
             kernel.Bind<IUnitOfWork>().To<UnitOfWork>().InRequestScope();
             kernel.Bind<IUserService>().To<UserService>();
             kernel.Bind<IRoleService>().To<RoleService>();
@@ -33,6 +34,7 @@ namespace DependencyResolver
             kernel.Bind<IPostService>().To<PostService>();
             kernel.Bind<IVoteService>().To<VoteService>();
             kernel.Bind<ICommentService>().To<CommentService>();
+            kernel.Bind<ICategoryService>().To<CategoryService>();
         }
     }
 }

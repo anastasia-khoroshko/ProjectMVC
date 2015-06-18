@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Concrete\CategoryRepository.cs" />
     <Compile Include="Concrete\CommentRepository.cs" />
     <Compile Include="Concrete\PostRepository.cs" />
     <Compile Include="Concrete\ProfileRepository.cs" />

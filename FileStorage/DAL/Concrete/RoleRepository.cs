@@ -15,9 +15,9 @@ namespace DAL.Concrete
     public class RoleRepository : IRepository<DalRole>
     {
         private readonly DbContext context;
-        public RoleRepository(IUnitOfWork uow)
+        public RoleRepository(DbContext uow)
         {
-            context = uow.Context;
+            context = uow;
         }
         public IEnumerable<DalRole> GetAll()
         {

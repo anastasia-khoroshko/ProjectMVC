@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DAL.Interfaces.DTO;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -7,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace DAL.Interfaces.Repository
 {
-    public interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork
     {
-        DbContext Context { get; }
         void Commit();
+        IRepository<T> GetRepository<T>() where T : IEntity;
     }
 }

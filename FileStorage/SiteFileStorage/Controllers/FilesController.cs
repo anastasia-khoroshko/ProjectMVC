@@ -8,6 +8,8 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using PagedList;
+using System.Web.Helpers;
 
 namespace SiteFileStorage.Controllers
 {
@@ -18,25 +20,33 @@ namespace SiteFileStorage.Controllers
         private readonly IPostService _postService;
         private readonly IVoteService _voteService;
         private readonly ICommentService _commentService;
+        private readonly ICategoryService _caregoryService;
         public FilesController(IUserService userService, IPostService postService, IVoteService voteService,
-            ICommentService commentService)
+            ICommentService commentService, ICategoryService categoryService)
         {
             _userService = userService;
             _postService = postService;
             _voteService = voteService;
             _commentService = commentService;
+            _caregoryService = categoryService;
         }
         [HttpGet]
-        public ActionResult UploadFiles()
+        public ActionResult UploadFiles(int? page)
         {
+           IEnumerable<FileViewModel> model = new List<FileViewModel>();
             try
             {
-                var model = _postService.GetAllPosts().Select(post => new FileViewModel()
+                var posts = _postService.GetPostsByPredicate(post => post.Permit == true);
+                if(posts!=null)
+                model=posts.Select(post => new FileViewModel()
                 {
                     Id = post.Id,
                     Name = post.Name
                 });
-                return View(model);
+                ViewBag.Categories = _caregoryService.GetAllCategories();
+                int pageSize = 10;
+                int pageNumber = (page ?? 1);
+                return View(model.ToPagedList(pageNumber,pageSize));
             }
             catch (SqlException ex)
             {
@@ -66,29 +76,44 @@ namespace SiteFileStorage.Controllers
             return Content("{\"name\":\"" + r[0].Name + "\",\"type\":\"" + r[0].Type + "\",\"size\":\"" + r[0].Size + "\"}", "application/json");
         }
 
-        public ActionResult CreatePost(string file_name, string file_type, string file_size, string name, string desсription)
+        public ActionResult CreatePost(UploadModelView model)
         {
+            PostEntity post;
             try
             {
-                if (string.IsNullOrEmpty(name))
+                if (model==null)
                 {
                     return RedirectToAction("NotFound", "Home");
                 }
                 else
                 {
                     var user = _userService.GetUserByPredicate(u => u.Email == HttpContext.User.Identity.Name);
-                    var post = new PostEntity()
+                    post = new PostEntity()
                     {
-                        Name = name,
-                        Description = desсription,
-                        FileName = file_name,
-                        FileSize = Convert.ToInt32(file_size),
-                        FileType = file_type,
-                        UserId = user.Id
+                        Name = model.Name,
+                        Description = model.Description,
+                        FileName = model.FileName,
+                        FileSize = Convert.ToInt32(model.FileSize),
+                        FileType = model.FileType,
+                        UserId = user.Id,
+                        Permit=false,
+                        Categories=new List<CategoryEntity>()
                     };
+
+                    CategoryEntity category;
+                    if (model.Categories!=null)
+                    {
+                        foreach (var elem in model.Categories)
+                        {
+                            category = _caregoryService.GetCategoryByPredicate(c => c.Name == elem);
+                            post.Categories.Add(category);
+                        }
+                    }
                     _postService.CreatePost(post);
                 }
-                return RedirectToAction("UploadFiles", "Files");
+                if (Request.IsAjaxRequest())
+                    return Json(post);
+                else return RedirectToAction("UploadFiles");
             }
             catch (SqlException ex)
             {
@@ -142,8 +167,9 @@ namespace SiteFileStorage.Controllers
 
         public FileResult Download(string name, string type)
         {
-            string path = @"D:\FileStorage\SiteFileStorage\UploadFiles\" + name;
-            return File(path, type, name);
+            string path = Path.Combine(Server.MapPath("~/UploadFiles"), name);
+            byte[] fileBytes = System.IO.File.ReadAllBytes(path);
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet,name);
         }
         [HttpGet]
         public ActionResult Edit(int id)
@@ -200,7 +226,9 @@ namespace SiteFileStorage.Controllers
                     return RedirectToAction("NotFound", "Home");
 
                 }
+                if(Request.IsAjaxRequest())
                 return Json(Name, Description);
+                else return RedirectToAction("ShowPost", new { id = Id });
             }
             catch (Exception ex)
             {
@@ -218,10 +246,10 @@ namespace SiteFileStorage.Controllers
             {
                 return RedirectToAction("NotFound", "Home");
             }
-            return RedirectToAction("Index", "Profile");
+            return RedirectToAction("Index", "Profile", new {email=HttpContext.User.Identity.Name });
         }
         [HttpPost]
-        public JsonResult SaveRating(int postID, int rate)
+        public ActionResult SaveRating(int postID, int rate)
         {
 
             var newVote = new VoteEntity()
@@ -234,7 +262,9 @@ namespace SiteFileStorage.Controllers
             var vote = _voteService.GetVotesByPost(v => v.PostId == postID);
             var listScore = vote.Select(v => v.Score);
             double newScore = listScore.Sum() / listScore.Count();
+            if(Request.IsAjaxRequest())
             return Json(newScore);
+            else return RedirectToAction("ShowPost", new { id = postID });
 
         }
 
@@ -253,13 +283,15 @@ namespace SiteFileStorage.Controllers
                     };
                 _commentService.Create(newComment);
                 var user=_userService.GetUserByPredicate(u => u.Id == newComment.UserId);
-                return Json(new NewCommentModel()
-                {
-                    Id = newComment.Id,
-                    Text = newComment.Text,
-                    UserName =user.Login,
-                    UserEmail =user.Email
-                });
+                if (Request.IsAjaxRequest())
+                    return Json(new NewCommentModel()
+                    {
+                        Id = newComment.Id,
+                        Text = newComment.Text,
+                        UserName = user.Login,
+                        UserEmail = user.Email
+                    });
+                else return  RedirectToAction("ShowPost", new { id = postId });
             }
             catch (Exception ex)
             {

@@ -15,17 +15,15 @@ namespace BLL.Services
     public class CommentService:ICommentService
     {
         private readonly IUnitOfWork uow;
-        private readonly ICommentRepository commentRepository;
-        public CommentService(IUnitOfWork uow, ICommentRepository commentRepository)
+        public CommentService(IUnitOfWork uow)
         {
             this.uow = uow;
-            this.commentRepository = commentRepository;
         }
         public CommentEntity Create(CommentEntity entity)
         {
             try
             {
-                commentRepository.Create(entity.ToDalComment());
+                uow.GetRepository<DalComment>().Create(entity.ToDalComment());
             }
             catch (SqlException ex)
             {
@@ -38,13 +36,13 @@ namespace BLL.Services
         public void DeleteComment(int key)
         {
             try
-            { 
-            DalComment post = commentRepository.GetCommentsByPredicate(x => x.Id == key).FirstOrDefault();
+            {
+                DalComment post = ((ICommentRepository)uow.GetRepository<DalComment>()).GetCommentsByPredicate(x => x.Id == key).FirstOrDefault();
             if (post == null)
             {
                 throw new Exception();
             }
-            commentRepository.Delete(key);
+            uow.GetRepository<DalComment>().Delete(key);
             }
             catch (SqlException ex)
             {
@@ -56,8 +54,8 @@ namespace BLL.Services
         public IEnumerable<CommentEntity> GetByPostId(int postId)
         {
             try
-            { 
-            var list = commentRepository.GetCommentsByPredicate(x => x.PostId == postId);
+            {
+                var list = ((ICommentRepository)uow.GetRepository<DalComment>()).GetCommentsByPredicate(x => x.PostId == postId);
             return list.Select(com => new CommentEntity()
                 {
                     Id = com.Id,

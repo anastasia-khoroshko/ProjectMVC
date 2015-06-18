@@ -6,8 +6,8 @@
         {
             $('.active').removeClass("active");
             node.className = "active";
-            document.getElementById(type + "List").style.display = 'block';
-            document.getElementById(id + "List").style.display = 'none';
+            $('#'+type + 'List').show();
+            $('#'+id + 'List').hide();
         }
             
     }

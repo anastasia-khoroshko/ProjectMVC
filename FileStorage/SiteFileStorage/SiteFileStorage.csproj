@@ -60,6 +60,14 @@
       <HintPath>..\packages\Ninject.MVC4.3.2.1.0\lib\net45-full\Ninject.Web.Mvc.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -152,6 +160,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\FilesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ModeratorController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -161,10 +170,12 @@
     <Compile Include="Models\CustomFileResult.cs" />
     <Compile Include="Models\FileViewModel.cs" />
     <Compile Include="Models\LogOnViewModel.cs" />
+    <Compile Include="Models\ModeratorFileViewModel.cs" />
     <Compile Include="Models\NewCommentModel.cs" />
     <Compile Include="Models\NewFileModel.cs" />
     <Compile Include="Models\ProfileViewModel.cs" />
     <Compile Include="Models\RegisterViewModel.cs" />
+    <Compile Include="Models\UploadModelView.cs" />
     <Compile Include="Models\UserViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\CustomMembershipProvider.cs" />
@@ -182,6 +193,7 @@
     <Content Include="Content\ErrorPage.css" />
     <Content Include="Content\jquery.fileupload.css" />
     <Content Include="Content\npm.js" />
+    <Content Include="Content\PagedList.css" />
     <Content Include="Content\RateStyle.css" />
     <Content Include="Content\SiteFileStorage.css" />
     <Content Include="Content\star-empty-lg.png" />
@@ -273,6 +285,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\knockout-2.2.0.debug.js" />
     <Content Include="Scripts\knockout-2.2.0.js" />
+    <Content Include="Scripts\ModeratorScripts\ModeratorScripts.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\npm.js" />
     <Content Include="Scripts\SearchScript\SearchEntryScript.js" />
@@ -306,6 +319,8 @@
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Admin\Edit.cshtml" />
     <Content Include="Views\Home\NotFound.cshtml" />
+    <Content Include="Views\Moderator\Index.cshtml" />
+    <Content Include="Views\Moderator\EditFile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

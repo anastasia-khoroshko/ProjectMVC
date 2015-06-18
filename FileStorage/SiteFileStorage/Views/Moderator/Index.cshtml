@@ -1,0 +1,59 @@
+﻿@model IEnumerable<SiteFileStorage.Models.ModeratorFileViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<form>
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+</form>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>FileName</th>
+            <th>FileType</th>
+            <th>Permit</th>
+            <th>Categories</th>
+            <th>Opeartions</th>
+        </tr>
+
+    </thead>
+    <tbody>
+        @foreach (var file in @Model)
+        {
+
+            <tr>
+                <td>@file.Id</td>
+                <td>@file.Name</td>
+                <td>@file.Description</td>
+                <td>@file.FileName</td>
+                <td>@file.FileType</td>
+                <td>@file.Permit</td>
+                <td>
+                    @if(file.Categories!=null)
+                    {
+                        foreach(var c in file.Categories)
+                        {
+                            @c
+                        <br />
+                        }
+                    }
+                </td>
+                <td>
+                    @if(file.Permit==false)
+                    { 
+                    @Html.ActionLink("Edit", "EditFile", new { postId = @file.Id })
+                    }
+                    <br />
+                    
+                        @Html.ActionLink("Delete", "Delete", new { id = @file.Id })
+                   
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

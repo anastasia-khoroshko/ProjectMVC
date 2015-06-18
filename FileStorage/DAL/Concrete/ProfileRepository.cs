@@ -15,9 +15,9 @@ namespace DAL.Concrete
     public class ProfileRepository : IProfileRepository
     {
         private readonly DbContext context;
-        public ProfileRepository(IUnitOfWork uow)
+        public ProfileRepository(DbContext uow)
         {
-            context = uow.Context;
+            context = uow;
         }
 
         public void Create(DalProfile entity)

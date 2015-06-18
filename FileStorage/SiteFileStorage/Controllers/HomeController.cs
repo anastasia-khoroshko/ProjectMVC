@@ -17,14 +17,28 @@ namespace SiteFileStorage.Controllers
     {
         private readonly IUserService _userService;
         private readonly IPostService _postService;
-        public HomeController(IUserService userService, IPostService postService)
+        private readonly ICategoryService _categoryService;
+        private readonly IVoteService _voteService;
+        public HomeController(IUserService userService, IPostService postService, ICategoryService categoryService, 
+            IVoteService voteService)
         {
             _userService = userService;
             _postService = postService;
+            _categoryService = categoryService;
+            _voteService = voteService;
         }
         public ActionResult Index()
         {
-            return View();
+            ViewBag.Categories = _categoryService.GetAllCategories();
+            var model = _postService.GetPostsByPredicate(p => p.Permit == true).Select(m => new FileViewModel()
+                {
+                    Id = m.Id,
+                    Name = m.Name,
+                    Description = m.Description,
+                    Categories = m.Categories.Select(c => c.Name).ToList(),
+                    Score = (_voteService.GetVotesByPost(p => p.Id == m.Id) != null) ? _voteService.GetVotesByPost(p => p.Id == m.Id).Select(v => v.Score).Sum() / _voteService.GetVotesByPost(p => p.Id == m.Id).Count() : 0
+                });
+            return View(model);
         }
         public ActionResult Search(string tag)
         {
@@ -34,13 +48,15 @@ namespace SiteFileStorage.Controllers
                 List<FileViewModel> result = new List<FileViewModel>();
                 if (!string.IsNullOrEmpty(tag))
                 {
-                    var listPosts = _postService.GetPostsByPredicate(post => culture.CompareInfo.IndexOf(post.Name, tag, CompareOptions.OrdinalIgnoreCase) >= 0
-                        || culture.CompareInfo.IndexOf(post.Description, tag, CompareOptions.OrdinalIgnoreCase) >= 0);
+                    var listPosts = _postService.GetPostsByPredicate(post => culture.CompareInfo.IndexOf(post.Name, tag, CompareOptions.IgnoreCase) >= 0
+                        || (!string.IsNullOrEmpty(post.Description))?culture.CompareInfo.IndexOf(post.Description, tag, CompareOptions.IgnoreCase) >= 0:false);
                     if (listPosts == null || !listPosts.Any())
                         result = null;
                     else
                     {
                         foreach (PostEntity post in listPosts)
+                            if(post.Permit==true)
+                            {
                             result.Add(new FileViewModel()
                                 {
                                     Id = post.Id,
@@ -50,6 +66,7 @@ namespace SiteFileStorage.Controllers
                                     FileType = post.FileType,
                                     FileSize = post.FileSize
                                 });
+                            }
                     }
                 }
                 return View(result);

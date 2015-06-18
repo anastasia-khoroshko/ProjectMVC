@@ -11,9 +11,9 @@
         });
         $('#savepost').click(function()
         {
-            var name = document.getElementById("Name").value;
-            var description = document.getElementById("Description").value;
-            var id = document.getElementById("Id").value;
+            var name = $('#Name').val();
+            var description = $('#Description').val();
+            var id = $('#Id').val();
             var reg = "/[a-z,0-9]*/";
             if (name.toString().length < 3 | reg.match(name)) {
                 $('#error').append("Value must be bigger than 3 character or invalid argument");
@@ -23,8 +23,8 @@
                 $.post("/Files/SaveChanges", post, null);
                 $('#shadow').hide();
                 $('#window').hide();
-                document.getElementById("newName").innerHTML ="<h2>"+name+"</h2>";
-                document.getElementById("newDesc").innerHTML ="<em>"+description+"</em>";
+                $('#newName').html("<h2>"+name+"</h2>");
+                $('#newDesc').html("<em>"+description+"</em>");
             }
         })
 
@@ -70,8 +70,8 @@
             });
         };
         $('#addComment').click(function () {
-            var comment = document.getElementById('comment').value;
-            var postId = document.getElementById('Id').value;
+            var comment = $('#comment').val();
+            var postId = $('#Id').val();
             $.ajax({
                 type: "POST",
                 url: "/Files/SaveComment",
@@ -79,13 +79,13 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
-                    document.getElementById('list').innerHTML=comment + " posted by " +"<a href=\"/Profile/?email="+data.UserEmail+"\">"+ data.UserName+"</a>";
-                    document.getElementById('comment').value = "";
+                    $('#list').html(comment + " posted by " +"<a href=\"/Profile/?email="+data.UserEmail+"\">"+ data.UserName+"</a>");
+                    $('#comment').val("");
                     $('#errorCom').html("");
                 },
                 error: function (data) {
-                    document.getElementById('errorCom').innerText = "Enter comment!";
-                    document.getElementById('errorCom').style.color = 'red';
+                    $('#errorCom').html("Enter comment!");
+                    $('#errorCom').css('color','red');
                 }
             })
         })

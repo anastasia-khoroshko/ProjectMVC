@@ -15,9 +15,9 @@ namespace DAL.Concrete
     public class CommentRepository:ICommentRepository
     {
         private readonly DbContext context;
-        public CommentRepository(IUnitOfWork uow)
+        public CommentRepository(DbContext uow)
         {
-            context = uow.Context;
+            context = uow;
         }
         public IEnumerable<DalComment> GetAll()
         {

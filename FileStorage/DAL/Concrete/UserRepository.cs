@@ -15,9 +15,9 @@ namespace DAL.Concrete
     public class UserRepository : IRepository<DalUser>
     {
         private readonly DbContext context;
-        public UserRepository(IUnitOfWork uow)
+        public UserRepository(DbContext uow)
         {
-            context = uow.Context;
+            context = uow;
         }
         public IEnumerable<DalUser> GetAll()
         {

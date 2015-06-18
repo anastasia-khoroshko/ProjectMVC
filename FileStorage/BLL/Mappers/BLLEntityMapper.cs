@@ -83,7 +83,7 @@ namespace BLL.Mappers
 
         public static PostEntity ToBLLEntity(this DalPost dalPost)
         {
-            return new PostEntity()
+            var post= new PostEntity()
             {
                 Id = dalPost.Id,
                 Name = dalPost.Name,
@@ -91,8 +91,13 @@ namespace BLL.Mappers
                 FileName = dalPost.FileName,
                 FileType = dalPost.FileType,
                 FileSize = dalPost.FileSize,
-                UserId = dalPost.UserId
+                UserId = dalPost.UserId,
+                Permit=dalPost.Permit,
+                Categories=null
             };
+            if(dalPost.Categories!=null)
+                post.Categories=dalPost.Categories.Select(p=>p.ToBllCategory()).ToList();
+            return post;
         }
 
         public static DalPost ToDalPost(this PostEntity post)
@@ -105,7 +110,9 @@ namespace BLL.Mappers
                 FileName = post.FileName,
                 FileType = post.FileType,
                 FileSize = post.FileSize,
-                UserId = post.UserId
+                UserId = post.UserId,
+                Permit=post.Permit,
+                Categories=post.Categories.Select(c=>c.ToDalCategory()).ToList()
             };
         }
 
@@ -151,6 +158,26 @@ namespace BLL.Mappers
                 PostId = dalCom.PostId,
                 UserId = dalCom.UserId
             };
+        }
+
+        public static DalCategory ToDalCategory(this CategoryEntity category)
+        {
+            return new DalCategory()
+            {
+                Id = category.Id,
+                Name = category.Name                
+            };
+            
+        }
+
+        public static CategoryEntity ToBllCategory(this DalCategory dalCategory)
+        {
+            return new CategoryEntity()
+            {
+                Id = dalCategory.Id,
+                Name = dalCategory.Name               
+            };
+            
         }
     }
 }

@@ -12,12 +12,14 @@ namespace ORM
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Diagnostics;
     
     public partial class SiteFileModel : DbContext
     {
         public SiteFileModel()
             : base("name=SiteFileModel")
         {
+            Debug.WriteLine("Create");
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -25,6 +27,7 @@ namespace ORM
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
         public virtual DbSet<Post> Posts { get; set; }
         public virtual DbSet<Profile> Profiles { get; set; }

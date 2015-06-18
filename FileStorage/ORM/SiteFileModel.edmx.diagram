@@ -4,18 +4,20 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="2b7eea3482b142a39684b69d40039e36" Name="Diagram1">
-        <EntityTypeShape EntityType="SiteFileDBModel.Comment" Width="1.5" PointX="7.5" PointY="1.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="SiteFileDBModel.Post" Width="1.5" PointX="5.25" PointY="2.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="SiteFileDBModel.Profile" Width="1.5" PointX="5.25" PointY="6.625" IsExpanded="true" />
+      <Diagram DiagramId="401387af64394885b013561c9a1472a2" Name="Diagram1">
+        <EntityTypeShape EntityType="SiteFileDBModel.Category" Width="1.5" PointX="3" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="SiteFileDBModel.Comment" Width="1.5" PointX="7.5" PointY="2.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="SiteFileDBModel.Post" Width="1.5" PointX="5.25" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="SiteFileDBModel.Profile" Width="1.5" PointX="5.25" PointY="9.375" IsExpanded="true" />
         <EntityTypeShape EntityType="SiteFileDBModel.Role" Width="1.5" PointX="0.75" PointY="4.375" IsExpanded="true" />
         <EntityTypeShape EntityType="SiteFileDBModel.User" Width="1.5" PointX="3" PointY="3.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="SiteFileDBModel.Vote" Width="1.5" PointX="7.5" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="SiteFileDBModel.Vote" Width="1.5" PointX="7.5" PointY="5.625" IsExpanded="true" />
         <AssociationConnector Association="SiteFileDBModel.FK_Comments_Posts" ManuallyRouted="false" />
         <AssociationConnector Association="SiteFileDBModel.FK_Posts_Users" ManuallyRouted="false" />
         <AssociationConnector Association="SiteFileDBModel.FK_Votes_Posts" ManuallyRouted="false" />
         <AssociationConnector Association="SiteFileDBModel.FK_Profiles_Users" ManuallyRouted="false" />
         <AssociationConnector Association="SiteFileDBModel.FK_Users_ToRoles" ManuallyRouted="false" />
+        <AssociationConnector Association="SiteFileDBModel.PostCategory" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

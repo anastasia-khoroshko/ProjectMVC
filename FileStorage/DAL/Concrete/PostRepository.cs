@@ -15,9 +15,9 @@ namespace DAL.Concrete
     public class PostRepository : IPostRepository
     {
         private readonly DbContext context;
-        public PostRepository(IUnitOfWork uow)
+        public PostRepository(DbContext uow)
         {
-            context = uow.Context;
+            context = uow;
         }
         public IEnumerable<DalPost> GetAll()
         {
@@ -31,7 +31,13 @@ namespace DAL.Concrete
                 FileName = p.FileName,
                 FileType = p.FileType,
                 FileSize = p.FileSize,
-                UserId = p.UserId
+                UserId = p.UserId,
+                Permit = p.Permit,
+                Categories = p.Categories.Select(s => new DalCategory()
+                {
+                    Id = s.Id,
+                    Name = s.Name
+                }).ToList()
             });
             }
             catch (SqlException ex)
@@ -57,7 +63,13 @@ namespace DAL.Concrete
                     FileName = post.FileName,
                     FileType = post.FileType,
                     FileSize = post.FileSize,
-                    UserId = post.UserId
+                    UserId = post.UserId,
+                    Permit = post.Permit,
+                    Categories = post.Categories.Select(s => new DalCategory()
+                    {
+                        Id = s.Id,
+                        Name = s.Name
+                    }).ToList()
                 };
 
             var param = Expression.Parameter(typeof(Post), "post");
@@ -72,16 +84,26 @@ namespace DAL.Concrete
                 {
                     if (func(post) == true)
                     {
-                        listPosts.Add(new DalPost()
+                        var correct=new DalPost()
                         {
-                Id = post.Id,
-                Name = post.Name,
-                Description = post.Description,
-                FileName = post.FileName,
-                FileType = post.FileType,
-                FileSize = post.FileSize,
-                UserId = post.UserId
-                        });
+                            Id = post.Id,
+                            Name = post.Name,
+                            Description = post.Description,
+                            FileName = post.FileName,
+                            FileType = post.FileType,
+                            FileSize = post.FileSize,
+                            UserId = post.UserId,
+                            Permit = post.Permit
+                        };
+                        if(post.Categories.Count!=0)
+                        {
+                            correct.Categories = post.Categories.Select(s => new DalCategory()
+                            {
+                                Id = s.Id,
+                                Name = s.Name
+                            }).ToList();
+                        }
+                        listPosts.Add(correct);
                     }
                 }
             }
@@ -101,10 +123,17 @@ namespace DAL.Concrete
                 FileName = entity.FileName,
                 FileType = entity.FileType,
                 FileSize = entity.FileSize,
-                UserId = entity.UserId
+                UserId = entity.UserId,
+                Permit = entity.Permit
             };
             try
             {
+                var list=new List<Category>();
+                foreach(var ele in entity.Categories)
+                {
+                    list.Add(context.Set<Category>().Where(c=>c.Id==ele.Id).FirstOrDefault());
+                }
+                post.Categories = list;
                 context.Set<Post>().Add(post);
             }
             catch (SqlException ex)
@@ -120,6 +149,15 @@ namespace DAL.Concrete
                 var post = context.Set<Post>().Find(entity.Id);
                 if (post != null)
                 {
+                    post.Categories = null;
+                    context.SaveChanges();
+                    var list = new List<Category>();
+                    foreach (var ele in entity.Categories)
+                    {
+                        list.Add(context.Set<Category>().Where(c => c.Id == ele.Id).FirstOrDefault());
+                    }
+                    post.Categories = list;
+                    context.SaveChanges();
                     var oldPost = context.Entry(post);
                     oldPost.CurrentValues.SetValues(new Post()
                     {
@@ -129,8 +167,12 @@ namespace DAL.Concrete
                         FileName = entity.FileName,
                         FileType = entity.FileType,
                         FileSize = entity.FileSize,
-                        UserId = entity.UserId
+                        UserId = entity.UserId,
+                        Permit = entity.Permit,
+                        Categories=list
                     });
+                   
+                    oldPost.Entity.Categories = list;
                     oldPost.State = EntityState.Modified;
                 }
             }

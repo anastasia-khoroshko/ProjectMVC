@@ -84,7 +84,7 @@ namespace SiteFileStorage.Controllers
                     };
                     _profileService.CreateProfile(profile);
                 }
-                return RedirectToAction("Index", "Profile");
+                return RedirectToAction("Index", "Profile", new { email=HttpContext.User.Identity.Name});
             }
             catch (Exception ex)
             {

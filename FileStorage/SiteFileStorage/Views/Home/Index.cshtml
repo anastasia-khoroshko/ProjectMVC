@@ -1,7 +1,15 @@
-﻿@{
+﻿@model IEnumerable<SiteFileStorage.Models.FileViewModel>
+@{
     ViewBag.Title = "Index";
     Layout = "/Views/Shared/_Layout.cshtml";
 }
-<body>
+@foreach (var category in ViewBag.Categories)
+{
+    if (@Model.Where(m => m.Categories != null && m.Categories.Contains(category.Name) == true) != null)
+    {
+        <h3>@category.Name</h3>
 
-</body>
+        @Html.Partial("_ShowListEntry", @Model.Where(m => m.Categories.Contains(category.Name) == true).OrderBy(s=>s.Score).Take(3))
+    }
+
+}

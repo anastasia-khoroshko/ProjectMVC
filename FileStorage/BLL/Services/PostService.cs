@@ -16,17 +16,15 @@ namespace BLL.Services
     public class PostService : IPostService
     {
         private readonly IUnitOfWork uow;
-        private readonly IPostRepository postRepository;
-        public PostService(IUnitOfWork uow, IPostRepository postRepository)
+        public PostService(IUnitOfWork uow)
         {
             this.uow = uow;
-            this.postRepository = postRepository;
         }
         public PostEntity CreatePost(PostEntity post)
         {
             try
             {
-                postRepository.Create(post.ToDalPost());
+                uow.GetRepository<DalPost>().Create(post.ToDalPost());
             }
             catch(SqlException ex)
             {
@@ -38,8 +36,8 @@ namespace BLL.Services
         public IEnumerable<PostEntity> GetAllPosts()
         {
             try
-            { 
-            return postRepository.GetAll().Select(post => post.ToBLLEntity());
+            {
+                return uow.GetRepository<DalPost>().GetAll().Select(post => post.ToBLLEntity());
             }
             catch (SqlException ex)
             {
@@ -70,7 +68,7 @@ namespace BLL.Services
             var lambda = Expression.Lambda<Func<DalPost, bool>>(body, param);
             try
             {
-                IEnumerable<DalPost> listPosts = postRepository.GetPostByPredicate(lambda);
+                IEnumerable<DalPost> listPosts = ((IPostRepository)uow.GetRepository<DalPost>()).GetPostByPredicate(lambda);
                 if (listPosts.Count() == 0)
                     return null;
                 return listPosts.Select(p => p.ToBLLEntity());
@@ -86,12 +84,12 @@ namespace BLL.Services
         {
             try
             {
-                DalPost post = postRepository.GetByPredicate(x => x.Id == key);
+                DalPost post = uow.GetRepository<DalPost>().GetByPredicate(x => x.Id == key);
                 if (post == null)
                 {
                     throw new Exception();
                 }
-                postRepository.Delete(key);
+                uow.GetRepository<DalPost>().Delete(key);
             }
             catch (SqlException ex)
             {
@@ -104,7 +102,7 @@ namespace BLL.Services
         {
             try
             {
-                postRepository.Update(entity.ToDalPost());
+                uow.GetRepository<DalPost>().Update(entity.ToDalPost());
                 uow.Commit();
             }
             catch (Exception exception)

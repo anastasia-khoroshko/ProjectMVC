@@ -15,9 +15,9 @@ namespace DAL.Concrete
     public class VoteRepository : IVoteRepository
     {
         private readonly DbContext context;
-        public VoteRepository(IUnitOfWork uow)
+        public VoteRepository(DbContext uow)
         {
-            context = uow.Context;
+            context = uow;
         }
         public IEnumerable<DalVote> GetVotesByPredicate(Expression<Func<DalVote, bool>> f)
         {

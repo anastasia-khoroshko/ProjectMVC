@@ -1,6 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
   <EntityContainerMapping StorageEntityContainer="SiteFileDBModelStoreContainer" CdmEntityContainer="SiteFileModel">
+    <EntitySetMapping Name="Categories">
+      <EntityTypeMapping TypeName="SiteFileDBModel.Category">
+        <MappingFragment StoreEntitySet="Categories">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <EntitySetMapping Name="Comments">
       <EntityTypeMapping TypeName="SiteFileDBModel.Comment">
         <MappingFragment StoreEntitySet="Comments">
@@ -21,6 +29,7 @@
           <ScalarProperty Name="FileType" ColumnName="FileType" />
           <ScalarProperty Name="FileSize" ColumnName="FileSize" />
           <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="Permit" ColumnName="Permit" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -67,5 +76,13 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <AssociationSetMapping Name="PostCategory" TypeName="SiteFileDBModel.PostCategory" StoreEntitySet="PostCategory">
+      <EndProperty Name="Categories">
+        <ScalarProperty Name="Id" ColumnName="IdCategory" />
+      </EndProperty>
+      <EndProperty Name="Posts">
+        <ScalarProperty Name="Id" ColumnName="IdPost" />
+      </EndProperty>
+    </AssociationSetMapping>
   </EntityContainerMapping>
 </Mapping>

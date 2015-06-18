@@ -18,6 +18,7 @@ namespace ORM
         {
             this.Comments = new HashSet<Comment>();
             this.Votes = new HashSet<Vote>();
+            this.Categories = new HashSet<Category>();
         }
     
         public int Id { get; set; }
@@ -27,9 +28,11 @@ namespace ORM
         public string FileType { get; set; }
         public int FileSize { get; set; }
         public int UserId { get; set; }
+        public bool Permit { get; set; }
     
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual User User { get; set; }
         public virtual ICollection<Vote> Votes { get; set; }
+        public virtual ICollection<Category> Categories { get; set; }
     }
 }

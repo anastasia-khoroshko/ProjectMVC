@@ -1,5 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Schema Namespace="SiteFileDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Category">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="Posts" Relationship="Self.PostCategory" FromRole="Categories" ToRole="Posts" />
+  </EntityType>
   <EntityType Name="Comment">
     <Key>
       <PropertyRef Name="Id" />
@@ -21,9 +29,11 @@
     <Property Name="FileType" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
     <Property Name="FileSize" Type="Int32" Nullable="false" />
     <Property Name="UserId" Type="Int32" />
+    <Property Name="Permit" Type="Boolean" Nullable="false" />
     <NavigationProperty Name="Comments" Relationship="Self.FK_Comments_Posts" FromRole="Posts" ToRole="Comments" />
     <NavigationProperty Name="User" Relationship="Self.FK_Posts_Users" FromRole="Posts" ToRole="Users" />
     <NavigationProperty Name="Votes" Relationship="Self.FK_Votes_Posts" FromRole="Posts" ToRole="Votes" />
+    <NavigationProperty Name="Categories" Relationship="Self.PostCategory" FromRole="Posts" ToRole="Categories" />
   </EntityType>
   <EntityType Name="Profile">
     <Key>
@@ -140,7 +150,12 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="PostCategory">
+    <End Role="Categories" Type="Self.Category" Multiplicity="*" />
+    <End Role="Posts" Type="Self.Post" Multiplicity="*" />
+  </Association>
   <EntityContainer Name="SiteFileModel" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Categories" EntityType="Self.Category" />
     <EntitySet Name="Comments" EntityType="Self.Comment" />
     <EntitySet Name="Posts" EntityType="Self.Post" />
     <EntitySet Name="Profiles" EntityType="Self.Profile" />
@@ -166,6 +181,10 @@
     <AssociationSet Name="FK_Users_ToRoles" Association="Self.FK_Users_ToRoles">
       <End Role="Roles" EntitySet="Roles" />
       <End Role="Users" EntitySet="Users" />
+    </AssociationSet>
+    <AssociationSet Name="PostCategory" Association="Self.PostCategory">
+      <End Role="Categories" EntitySet="Categories" />
+      <End Role="Posts" EntitySet="Posts" />
     </AssociationSet>
   </EntityContainer>
 </Schema>

@@ -16,19 +16,15 @@ namespace BLL.Services
     public class UserService : IUserService
     {
         private readonly IUnitOfWork uow;
-        private readonly IRepository<DalUser> userRepository;
-        private readonly IRepository<DalRole> roleRepository;
-        public UserService(IUnitOfWork uow, IRepository<DalUser> userRepository, IRepository<DalRole> roleRepository)
+        public UserService(IUnitOfWork uow)
         {
             this.uow = uow;
-            this.userRepository = userRepository;
-            this.roleRepository = roleRepository;
         }
         public UserEntity CreateUser(UserEntity user)
         {
             try
             {
-                userRepository.Create(user.ToDalUser());
+                uow.GetRepository<DalUser>().Create(user.ToDalUser());
             }
             catch(SqlException ex)
             {
@@ -41,8 +37,8 @@ namespace BLL.Services
         public IEnumerable<UserEntity> GetAllUsers()
         {
             try
-            { 
-            return userRepository.GetAll().Select(user => user.ToBllUser());
+            {
+                return uow.GetRepository<DalUser>().GetAll().Select(user => user.ToBllUser());
             }
             catch (SqlException ex)
             {
@@ -53,13 +49,13 @@ namespace BLL.Services
         public void DeleteUser(int id)
         {
             try
-            { 
-            DalUser user = userRepository.GetByPredicate(x => x.Id == id);
+            {
+                DalUser user = uow.GetRepository<DalUser>().GetByPredicate(x => x.Id == id);
             if (user == null)
             {
                 throw new Exception();
             }
-            userRepository.Delete(id);
+            uow.GetRepository<DalUser>().Delete(id);
             }
             catch (SqlException ex)
             {
@@ -72,7 +68,7 @@ namespace BLL.Services
         {
             try
             {
-                userRepository.Update(user.ToDalUser());
+                uow.GetRepository<DalUser>().Update(user.ToDalUser());
                 uow.Commit();
             }
             catch (Exception exception)
@@ -92,7 +88,7 @@ namespace BLL.Services
             var lambda = Expression.Lambda<Func<DalUser, bool>>(body, param);
             try
             {
-                DalUser correctUser = userRepository.GetByPredicate(lambda);
+                DalUser correctUser = uow.GetRepository<DalUser>().GetByPredicate(lambda);
                 if (correctUser == null)
                     return null;
                 return correctUser.ToBllUser();

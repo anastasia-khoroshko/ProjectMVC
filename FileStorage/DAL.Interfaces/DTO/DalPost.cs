@@ -15,6 +15,8 @@ namespace DAL.Interfaces.DTO
         public string FileType { get; set; }
         public int FileSize { get; set; }
         public int UserId { get; set; }
+        public bool Permit { get; set; }
+        public List<DalCategory> Categories {get;set;}
 
     }
 }

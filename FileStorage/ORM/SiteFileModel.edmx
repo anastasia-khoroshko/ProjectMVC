@@ -5,6 +5,13 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
       <Schema Namespace="SiteFileDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Categories">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar(max)" Nullable="false" />
+        </EntityType>
         <EntityType Name="Comments">
           <Key>
             <PropertyRef Name="Id" />
@@ -13,6 +20,14 @@
           <Property Name="Text" Type="varchar(max)" Nullable="false" />
           <Property Name="UserId" Type="int" Nullable="false" />
           <Property Name="PostId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PostCategory">
+          <Key>
+            <PropertyRef Name="IdPost" />
+            <PropertyRef Name="IdCategory" />
+          </Key>
+          <Property Name="IdPost" Type="int" Nullable="false" />
+          <Property Name="IdCategory" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Posts">
           <Key>
@@ -25,6 +40,7 @@
           <Property Name="FileType" Type="varchar(max)" Nullable="false" />
           <Property Name="FileSize" Type="int" Nullable="false" />
           <Property Name="UserId" Type="int" />
+          <Property Name="Permit" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Profiles">
           <Key>
@@ -76,6 +92,34 @@
             </Principal>
             <Dependent Role="Comments">
               <PropertyRef Name="PostId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PostCategory_Categories">
+          <End Role="Categories" Type="Self.Categories" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="PostCategory" Type="Self.PostCategory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Categories">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PostCategory">
+              <PropertyRef Name="IdCategory" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PostCategory_Posts">
+          <End Role="Posts" Type="Self.Posts" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="PostCategory" Type="Self.PostCategory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Posts">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PostCategory">
+              <PropertyRef Name="IdPost" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -136,7 +180,9 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="SiteFileDBModelStoreContainer">
+          <EntitySet Name="Categories" EntityType="Self.Categories" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Comments" EntityType="Self.Comments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PostCategory" EntityType="Self.PostCategory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Posts" EntityType="Self.Posts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Profiles" EntityType="Self.Profiles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
@@ -145,6 +191,14 @@
           <AssociationSet Name="FK_Comments_Posts" Association="Self.FK_Comments_Posts">
             <End Role="Posts" EntitySet="Posts" />
             <End Role="Comments" EntitySet="Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PostCategory_Categories" Association="Self.FK_PostCategory_Categories">
+            <End Role="Categories" EntitySet="Categories" />
+            <End Role="PostCategory" EntitySet="PostCategory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PostCategory_Posts" Association="Self.FK_PostCategory_Posts">
+            <End Role="Posts" EntitySet="Posts" />
+            <End Role="PostCategory" EntitySet="PostCategory" />
           </AssociationSet>
           <AssociationSet Name="FK_Posts_Users" Association="Self.FK_Posts_Users">
             <End Role="Users" EntitySet="Users" />
@@ -168,6 +222,14 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="SiteFileDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Posts" Relationship="Self.PostCategory" FromRole="Categories" ToRole="Posts" />
+        </EntityType>
         <EntityType Name="Comment">
           <Key>
             <PropertyRef Name="Id" />
@@ -189,9 +251,11 @@
           <Property Name="FileType" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="FileSize" Type="Int32" Nullable="false" />
           <Property Name="UserId" Type="Int32" />
+          <Property Name="Permit" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Comments" Relationship="Self.FK_Comments_Posts" FromRole="Posts" ToRole="Comments" />
           <NavigationProperty Name="User" Relationship="Self.FK_Posts_Users" FromRole="Posts" ToRole="Users" />
           <NavigationProperty Name="Votes" Relationship="Self.FK_Votes_Posts" FromRole="Posts" ToRole="Votes" />
+          <NavigationProperty Name="Categories" Relationship="Self.PostCategory" FromRole="Posts" ToRole="Categories" />
         </EntityType>
         <EntityType Name="Profile">
           <Key>
@@ -308,7 +372,12 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="PostCategory">
+          <End Role="Categories" Type="Self.Category" Multiplicity="*" />
+          <End Role="Posts" Type="Self.Post" Multiplicity="*" />
+        </Association>
         <EntityContainer Name="SiteFileModel" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Categories" EntityType="Self.Category" />
           <EntitySet Name="Comments" EntityType="Self.Comment" />
           <EntitySet Name="Posts" EntityType="Self.Post" />
           <EntitySet Name="Profiles" EntityType="Self.Profile" />
@@ -335,6 +404,10 @@
             <End Role="Roles" EntitySet="Roles" />
             <End Role="Users" EntitySet="Users" />
           </AssociationSet>
+          <AssociationSet Name="PostCategory" Association="Self.PostCategory">
+            <End Role="Categories" EntitySet="Categories" />
+            <End Role="Posts" EntitySet="Posts" />
+          </AssociationSet>
         </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
@@ -342,6 +415,14 @@
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="SiteFileDBModelStoreContainer" CdmEntityContainer="SiteFileModel">
+          <EntitySetMapping Name="Categories">
+            <EntityTypeMapping TypeName="SiteFileDBModel.Category">
+              <MappingFragment StoreEntitySet="Categories">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Comments">
             <EntityTypeMapping TypeName="SiteFileDBModel.Comment">
               <MappingFragment StoreEntitySet="Comments">
@@ -362,6 +443,7 @@
                 <ScalarProperty Name="FileType" ColumnName="FileType" />
                 <ScalarProperty Name="FileSize" ColumnName="FileSize" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Permit" ColumnName="Permit" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -408,6 +490,14 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <AssociationSetMapping Name="PostCategory" TypeName="SiteFileDBModel.PostCategory" StoreEntitySet="PostCategory">
+            <EndProperty Name="Categories">
+              <ScalarProperty Name="Id" ColumnName="IdCategory" />
+            </EndProperty>
+            <EndProperty Name="Posts">
+              <ScalarProperty Name="Id" ColumnName="IdPost" />
+            </EndProperty>
+          </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

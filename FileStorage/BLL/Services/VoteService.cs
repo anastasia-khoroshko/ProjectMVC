@@ -17,17 +17,15 @@ namespace BLL.Services
     {
 
         private readonly IUnitOfWork uow;
-        private readonly IVoteRepository voteRepository;
-        public VoteService(IUnitOfWork uow, IVoteRepository voteRepository)
+        public VoteService(IUnitOfWork uow)
         {
             this.uow = uow;
-            this.voteRepository = voteRepository;
         }
         public VoteEntity CreateVote(VoteEntity vote)
         {
             try
             {
-                voteRepository.Create(vote.ToDalVote());
+                uow.GetRepository<DalVote>().Create(vote.ToDalVote());
             }
             catch(SqlException ex)
             {
@@ -47,7 +45,7 @@ namespace BLL.Services
             var lambda = Expression.Lambda<Func<DalVote, bool>>(body, param);
             try
             {
-                IEnumerable<DalVote> listVotes = voteRepository.GetVotesByPredicate(lambda);
+                IEnumerable<DalVote> listVotes = ((IVoteRepository)uow.GetRepository<DalVote>()).GetVotesByPredicate(lambda);
 
                 if (listVotes.Count() == 0)
                     return null;
@@ -64,12 +62,12 @@ namespace BLL.Services
         {
             try
             {
-                DalVote vote = voteRepository.GetVotesByPredicate(v => v.Id == key).FirstOrDefault();
+                DalVote vote = ((IVoteRepository)uow.GetRepository<DalVote>()).GetVotesByPredicate(v => v.Id == key).FirstOrDefault();
                 if (vote == null)
                 {
                     throw new Exception();
                 }
-                voteRepository.Delete(key);
+                uow.GetRepository<DalVote>().Delete(key);
             }
             catch (SqlException ex)
             {

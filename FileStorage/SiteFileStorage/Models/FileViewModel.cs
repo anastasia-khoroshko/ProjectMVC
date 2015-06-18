@@ -20,5 +20,6 @@ namespace SiteFileStorage.Models
         public int CurrentUserId { get; set; }
         public double Score { get; set; }
         public IEnumerable<int> RatedUser { get; set; }
+        public List<string> Categories { get; set; }
     }
 }

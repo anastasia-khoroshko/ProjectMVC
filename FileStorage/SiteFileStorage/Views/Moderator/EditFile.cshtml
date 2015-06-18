@@ -1,0 +1,85 @@
+﻿@model SiteFileStorage.Models.ModeratorFileViewModel
+@{
+    ViewBag.Title = "EditFile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Scripts/jquery-1.9.1.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/Scripts/ModeratorScripts/ModeratorScripts.js"></script>
+<fieldset>
+    <center>
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.FileName)
+        @Html.HiddenFor(model => model.FileType)
+        @Html.HiddenFor(model => model.Name)
+        @Html.HiddenFor(model => model.Description)
+        <div>
+            Name: @Model.Name
+        </div>
+        <div>
+            Description: @Model.Description
+        </div>
+
+        @if (Model.FileType.Contains("video"))
+        {
+
+            <video controls="controls" preload="metadata" width="640" height="360">
+                <source type=@Model.FileType src="@Url.Action("FileShow", "Files", new { name=@Model.FileName})" />
+            </video>
+        }
+
+        @if (Model.FileType.Contains("audio"))
+        {
+            <audio controls="controls" preload="metadata">
+                <source type=@Model.FileType src="@Url.Action("FileShow", "Files", new { name=@Model.FileName})" />
+            </audio>
+
+        }
+        @if (Model.FileType.Contains("application"))
+        {
+            <span class="glyphicon glyphicon-tasks" aria-hidden="true" style="font-size:x-large"></span><h4>@Model.FileName</h4>
+        }
+        @*@if(Model.Permit==true)
+        { 
+        <div>
+            <input id="Permit" name="Permit" type="checkbox" checked="checked"><input name="Permit" type="hidden" value="true">
+            <label>Permit</label>
+        </div>
+        }
+        else
+        {
+            <div>
+            <input id="Permit" name="Permit" type="checkbox"><input name="Permit" type="hidden" value="false">
+            <label>Permit</label>
+        </div>
+        }*@
+        <div>
+            @Html.LabelFor(model=>model.Permit)
+            @Html.CheckBoxFor(model => model.Permit)
+        </div>
+    </center>
+    <h4>Categories:</h4>
+    <ul id="list">
+        @if(Model.Categories!=null)
+        { 
+        foreach (var c in Model.Categories)
+        {
+            <li>@c</li>
+        }
+        }
+    </ul>
+    <h4>Select another categories:</h4>
+    <form>
+        @foreach (var c in ViewBag.Categories)
+        {
+            <label style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size:medium;" class="text-info">
+                <input id="@c.Id" name="@c.Name" type="checkbox"><input name="@c.Name" type="hidden" value="false">
+                <label>@c.Name</label>
+            </label>
+        }
+        <br />
+        <button onclick="btnSaveCat(this.form)" class="btn btn-primary" id="btnSaveCategory" name="btnSaveCategory" type="button">Save Changes</button>
+    </form>
+
+</fieldset>
+
